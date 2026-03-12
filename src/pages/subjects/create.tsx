@@ -5,4 +5,4 @@ export const SubjectsCreate = () => {
     <div>create</div>
   )
 }
-export default SubjectsCreate
+export default SubjectsCreate;
