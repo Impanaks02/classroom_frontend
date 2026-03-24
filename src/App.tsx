@@ -52,11 +52,10 @@ function App() {
               <Routes>
                 <Route element={<Layout><Outlet /></Layout>}> {/* 👈 Layout wraps all routes */}
                   <Route path="/" element={<Dashboard />} /> {/* 👈 Nested inside Layout */}
-
-                </Route>
-                <Route path="subjects" > 
-                  <Route index element={<SubjectsList />} /> {/* 👈 List route */}
-                  <Route path="create" element={<SubjectsCreate />} /> {/* 👈 Create route */}
+                  <Route path="subjects" > 
+                    <Route index element={<SubjectsList />} /> {/* 👈 List route */}
+                    <Route path="create" element={<SubjectsCreate />} /> {/* 👈 Create route */}
+                  </Route>
                 </Route>
               </Routes>
               <UnsavedChangesNotifier />
