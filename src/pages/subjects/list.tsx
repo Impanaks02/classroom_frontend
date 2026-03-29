@@ -9,13 +9,15 @@ import { DEPARTMENT_OPTIONS } from "@/constants";
 import { useTable } from "@refinedev/react-table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Search } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Subject } from "@/types";
 
 
 export const SubjectsList = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDepartment, setSelectedDepartment] = useState('all');
+  // Keep disabled until `dataProvider.create` and `subjects/create` are implemented.
+  const isCreateEnabled = false;
 
   const columns = useMemo<ColumnDef<Subject>[]>(
     () => [
@@ -60,6 +62,19 @@ export const SubjectsList = () => {
       sorters: { initial: [{ field: 'id', order: 'desc' }] },
     },
   });
+  const { setFilters } = subjectTable.refineCore;
+
+  useEffect(() => {
+    const nextDepartmentFilter =
+      selectedDepartment === "all"
+        ? []
+        : [{ field: "department", operator: "eq" as const, value: selectedDepartment }];
+    const nextSearchFilter = searchQuery
+      ? [{ field: "name", operator: "contains" as const, value: searchQuery }]
+      : [];
+
+    setFilters([...nextDepartmentFilter, ...nextSearchFilter], "replace");
+  }, [searchQuery, selectedDepartment, setFilters]);
 
   return (
     <ListView>
@@ -95,7 +110,11 @@ export const SubjectsList = () => {
               ))}
             </SelectContent>
           </Select>
-          <CreateButton resource="subjects" />
+          <CreateButton
+            resource="subjects"
+            disabled={!isCreateEnabled}
+            title={!isCreateEnabled ? "Create is temporarily unavailable" : undefined}
+          />
         </div>
       </div>
 
